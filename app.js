@@ -75,9 +75,9 @@ const sessionOptions={
 };
 
 
-app.get("/",(req,res)=>{
-  res.render("/listings");
-});
+// app.get("/",(req,res)=>{
+//   res.render("/listings");
+// });
 
 app.use(session(sessionOptions));
 app.use(flash());
