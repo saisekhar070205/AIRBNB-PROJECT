@@ -35,6 +35,8 @@ app.use(express.static(path.join(__dirname, "/public")));
 
 // ----------------- MONGODB CONNECTION -----------------
 const dbUrl = process.env.ATLASDB_URL;
+console.log("DB URL:", process.env.ATLASDB_URL);
+
 
 mongoose
   .connect(dbUrl) // Removed deprecated options
