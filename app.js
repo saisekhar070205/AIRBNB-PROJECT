@@ -22,25 +22,22 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-// Set view engine
+// ----------------- VIEW ENGINE -----------------
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.engine("ejs", ejsMate);
 
-// Middleware
+// ----------------- MIDDLEWARE -----------------
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
 // ----------------- MONGODB CONNECTION -----------------
-const dbUrl =process.env.ATLASDB_URL;
+const dbUrl = process.env.ATLASDB_URL;
 
 mongoose
-  .connect(dbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(dbUrl) // Removed deprecated options
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch((err) => {
     console.log("❌ MongoDB connection error:");
@@ -83,11 +80,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Flash & current user
+// ----------------- FLASH & CURRENT USER -----------------
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.currUser = req.user || null;
+  res.locals.currUser = req.user || null; // Now available in all EJS templates
   next();
 });
 
@@ -103,7 +100,6 @@ app.get("/", (req, res) => {
 // ----------------- ERROR HANDLER -----------------
 app.use((err, req, res, next) => {
   const { status = 500, message = "Something went wrong!" } = err;
-  // If headers already sent, delegate to default Express handler
   if (res.headersSent) {
     return next(err);
   }
